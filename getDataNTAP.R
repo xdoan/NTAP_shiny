@@ -1,4 +1,6 @@
 cat(file=stderr(), "reading data...", "\n")
+
+### syndccutils functions 
 get_table_df <- function(table_id, cache = FALSE) {
   if (cache) {
     viewcache_dir <- "data/viewcache"
@@ -25,6 +27,82 @@ get_table_df <- function(table_id, cache = FALSE) {
     syn_table_data$asDataFrame()
   }
 }
+
+create_synapse_links <- function(
+    df, link_keys
+) {
+    base_url <- "https://www.synapse.org/#!Synapse:"
+    link_template <- glue::glue(
+        "<a href='{base}{{id}}' target='_blank'>{{target}}</a>",
+        base = base_url
+    )
+    link_keys %>%
+        walk2(names(.), function(id_key, target_key) {
+            target_col <- as.name(target_key)
+            id_col <- as.name(id_key)
+            df <<- df %>%
+                mutate(
+                    UQ(target_col) :=
+                        ifelse(!is.na(UQ(target_col)),
+                               glue::glue(
+                                   link_template,
+                                   id = UQ(id_col),
+                                   target = UQ(target_col)
+                               ),
+                               UQ(target_col))
+                )
+        })
+    df
+}
+
+plot_file_counts_by_annotationkey <- function(
+    view_df, annotation_keys, replace_missing = "Not Annotated",
+    chart_height = NULL
+) {
+
+    chart <- annotation_keys %>%
+        map2(.y = names(.), function(annotation_prettykey, annotation_key) {
+            key_col <- as.name(annotation_key)
+            plot_df <- view_df %>%
+                group_by(.dots = annotation_key) %>%
+                tally() %>%
+                mutate_at(.vars = annotation_key,
+                                 funs(replace(., is.na(.), replace_missing))) %>%
+                mutate(UQ(key_col) := forcats::fct_relevel(
+                    UQ(key_col), replace_missing, after = 0L
+                )) %>%
+                mutate(label = glue::glue(
+                    "<b>{value}:</b>\n{count} files",
+                    value = UQ(key_col),
+                    count = n
+                ))
+
+            p <- plot_df %>%
+                ggplot(aes(x = 1, y = n, text = label)) +
+                geom_col(aes_(fill = as.name(annotation_key)),
+                                  position = position_stack(reverse = FALSE),
+                                  colour = "white", size = 0.2) +
+                scale_fill_viridis_d() +
+                xlab(annotation_prettykey) +
+                ylab("Number of Files") +
+                scale_x_continuous(expand = c(0, 0)) +
+                scale_y_continuous(expand = c(0, 0)) +
+                custom_theme_bw() +
+                theme(axis.text.x = element_blank(),
+                               axis.ticks.x = element_blank()) +
+                guides(fill = FALSE)
+
+            plotly::ggplotly(p, tooltip = "text",
+                     width = 100 * length(annotation_keys) + 50,
+                     height = chart_height)
+        }) %>%
+        plotly::subplot(shareY = TRUE, titleX = TRUE) %>%
+        plotly::layout(showlegend = FALSE,
+                       font = list(family = "Roboto, Open Sans, sans-serif")) %>%
+        plotly::config(displayModeBar = F)
+    chart
+}
+
 synapser::synLogin()
 ntap_summary_df <- get_table_df("syn18496443", cache = TRUE) ## moved to NTAP folder
 
@@ -194,62 +272,3 @@ plot_sample_counts_by_annotationkey_2d_NTAP <- function(
                                  yanchor = "top", y = 1)) %>%
     plotly::config(displayModeBar = F)
 }
-#### manually plug in for plot_sample_counts_by_annotationkey_2d_NTAP
-# view_df <- ntap_summary_df %>%
-#   filter(!is.na(assay),
-#          !(assay %in% c("null", "Not Applicable"))) %>%
-#   filter(!is.na(tumorType),
-#          !(tumorType %in% c("null", "Not Applicable"))) 
-# 
-# sample_key = "individualID"
-# annotation_keys = config$annotationkey_value[c(
-#       "study",
-#       "study"
-#     )]
-# ### 
-# 
-# fill_vals <- unique(view_df[[names(annotation_keys)[1]]])
-# bar_vals <- unique(view_df[[names(annotation_keys)[2]]])
-# num_bars <- length(bar_vals)
-# 
-# fill_margin <- max(map_int(fill_vals, stringr::str_length))
-# bar_margin <- max(map_int(bar_vals, stringr::str_length))
-# 
-# sample_labels <- list(individualID = "Individuals",
-#                       specimenID = "Specimens",
-#                       # cellLine = "Cell Lines",
-#                       id = "Files")
-# 
-# replace_missing <- "Not Annotated"
-# plot_df <- view_df %>%
-#   group_by(.dots = names(annotation_keys)) %>%
-#   summarize(n = n_distinct(UQ(as.name(sample_key)), na.rm = TRUE ) ) %>% ### need na.rm
-#   ungroup() %>%
-#   mutate_at(.vars = names(annotation_keys),
-#             funs(replace(., is.na(.), replace_missing))) %>%
-#   mutate_at(.vars = names(annotation_keys),
-#             funs(forcats::fct_infreq(.))) %>%
-#   mutate_at(.vars = names(annotation_keys),
-#             funs(forcats::fct_rev(.))) %>%
-#   # mutate_at(.vars = names(annotation_keys),
-#   #                  funs(forcats::fct_relevel(., "Not Annotated"))) %>%
-#   mutate(label = glue::glue(
-#     "<b>{assay}:</b>\n{count} {samples}",
-#     assay = UQ(as.name(names(annotation_keys)[1])),
-#     count = n,
-#     samples = stringr::str_to_lower(sample_labels[[sample_key]]))
-#   )
-# 
-# p <- plot_df %>%
-#   ggplot(aes_string(x = names(annotation_keys)[2], y = "n",
-#                     text = "label")) +
-#   geom_col(aes_string(fill = names(annotation_keys[1])),
-#            colour = "white", size = 0.2) +
-#   scale_fill_viridis_d(annotation_keys[[1]]) +
-#   xlab("") +
-#   ylab(glue::glue("Number of {label}",
-#                   label = sample_labels[[sample_key]])) +
-#   scale_y_continuous(expand = c(0, 0)) +
-#   coord_flip() +
-#   custom_theme_bw()
-# ggplotly(p)

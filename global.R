@@ -18,7 +18,7 @@ library(synapser)
 library(yaml)
 library(pier)
 
-config = yaml::yaml.load_file("/Users/xdoan/Shell/R/NF_work/NTAP_dashboard_Test/configuration.yaml")
+config = yaml::yaml.load_file("configuration.yaml")
 
 consortium_donut <- function(consortium_counts, key, key_label) {
   ntap_consortium_counts %>% 

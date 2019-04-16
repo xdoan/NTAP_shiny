@@ -1,0 +1,29 @@
+annotationkey_value:
+  assay: Assay
+  diagnosis: Diagnosis
+  tumorType: Tumor Type
+  name_project: Center
+  study: Study
+  resourceType: Resource Type
+  
+annotationkey_display:
+  Assay: assay
+  Diagnosis: diagnosis
+  Tumor Type: tumorType
+  Study: study
+  Resource Type: resourceType
+
+annotationkey_display2:
+  Assay: assay
+  Diagnosis: diagnosis
+  Tumor Type: tumorType
+  Study: name_project
+  Resource Type : resourceType
+
+sampletype_value:
+  individualID: Individuals
+  specimenID: Specimens
+
+sampletype_display:
+  Individuals: individualID
+  Specimens: specimenID

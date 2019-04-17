@@ -5,6 +5,31 @@ function(input, output, session) {
   # 
   # foo <- observeEvent(input$cookie, {
   #     synLogin(sessionToken=input$cookie)
+  ### from kenny's server.R
+ 
+  session$sendCustomMessage(type="readCookie", message=list())
+  
+  foo <- observeEvent(input$cookie, {
+    
+    synLogin(sessionToken=input$cookie)
+    
+    output$title <- renderUI({
+      titlePanel(sprintf("Welcome, %s", synGetUserProfile()$userName))
+    })
+    
+    output$distPlot <- renderPlot({
+      
+      # generate bins based on input$bins from ui.R
+      x    <- faithful[, 2]
+      bins <- seq(min(x), max(x), length.out = input$bins + 1)
+      
+      # draw the histogram with the specified number of bins
+      hist(x, breaks = bins, col = 'darkgray', border = 'white')
+      
+    })
+  })    
+})
+
   withProgress(message = 'Loading data...',
                {source("getDataNTAP.R")})
   

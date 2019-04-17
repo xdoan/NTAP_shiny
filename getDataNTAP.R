@@ -103,7 +103,7 @@ plot_file_counts_by_annotationkey <- function(
     chart
 }
 
-synapser::synLogin()
+synapser::synLogin(sessiontoken=input$cookie)
 ntap_summary_df <- get_table_df("syn18496443", cache = TRUE) ## moved to NTAP folder
 
 ntap_summary_df <- ntap_summary_df %>% 

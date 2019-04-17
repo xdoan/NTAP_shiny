@@ -1,9 +1,5 @@
 dashboardPage(
-  tags$head(
-    singleton(
-      includeScript("www/readCookie.js")
-    )
-  ),
+
   dashboardHeader(
     title = "NTAP Summary Dashboard",
     titleWidth = 350

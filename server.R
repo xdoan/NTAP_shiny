@@ -1,4 +1,4 @@
-shinyServer(function(input, output, session) {
+function(input, output, session) {
   session$sendCustomMessage(type = "readCookie", message = list())
   setBookmarkExclude(c("cookie", "authorized"))
 
@@ -359,6 +359,6 @@ shinyServer(function(input, output, session) {
     })
   
   })
-})   
+}
 
   

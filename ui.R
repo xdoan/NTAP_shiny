@@ -5,6 +5,7 @@ dashboardPage(
       singleton(
         includeScript("www/readCookie.js")
       ),
+    ),
     title = "NTAP Summary Dashboard",
     titleWidth = 350
   ),
@@ -25,8 +26,8 @@ dashboardPage(
     #   singleton(
     #     includeScript("www/readCookie.js")
     #   ),
-      tags$link(rel = "stylesheet", type = "text/css", href = "custom.css")
-    ),
+    #   tags$link(rel = "stylesheet", type = "text/css", href = "custom.css")
+    # ),
     tabItems(
       tabItem(tabName = "kp_overview",
               fluidRow(

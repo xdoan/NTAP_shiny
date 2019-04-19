@@ -3,6 +3,12 @@ library(shinydashboard)
 
 shinyUI(dashboardPage(
   dashboardHeader(
+    tags$head(
+      singleton(
+        includeScript("www/readCookie.js")
+      ),
+      tags$link(rel = "stylesheet", type = "text/css", href = "custom.css")
+    ),
     title = "NTAP Summary Dashboard",
     titleWidth = 350 #,
     # header=list(tags$head(includeScript("www/readCookie.js"))),
@@ -20,12 +26,12 @@ shinyUI(dashboardPage(
     )
   ),
   dashboardBody(
-    tags$head(
-      singleton(
-        includeScript("www/readCookie.js")
-      ),
-      tags$link(rel = "stylesheet", type = "text/css", href = "custom.css")
-    ),
+    # tags$head(
+    #   singleton(
+    #     includeScript("www/readCookie.js")
+    #   ),
+    #   tags$link(rel = "stylesheet", type = "text/css", href = "custom.css")
+    # ),
     tabItems(
       tabItem(tabName = "kp_overview",
               fluidRow(

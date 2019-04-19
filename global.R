@@ -15,6 +15,7 @@ library(PythonEmbedInR)
 library(synapser)
 # devtools::install_github("Sage-Bionetworks/syndccutils", subdir = "R")
 # library(syndccutils)
+library(stringr)
 library(yaml)
 library(pier)
 

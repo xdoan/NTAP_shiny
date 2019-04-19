@@ -138,7 +138,7 @@ shinyServer(function(input, output, session) {
       } 
       plot_df <- plot_df %>% 
         mutate(
-          month_pretty = str_c(
+          month_pretty = stringr::str_c(
             lubridate::month(month, label = TRUE),
             lubridate::year(month),
             sep = ". "
@@ -227,7 +227,7 @@ shinyServer(function(input, output, session) {
                     # field == "Publication_geodata_produced" ~ "GEO Datasets",
                     TRUE ~ field
                   ),
-                  field = str_c("<b>", field, "</b>")
+                  field = stringr::str_c("<b>", field, "</b>")
           ) 
         
         knitr::kable(center_data_df, "html", escape = FALSE, col.names = NULL,
@@ -319,7 +319,7 @@ shinyServer(function(input, output, session) {
           }
           plot_df <- plot_df %>%
             mutate(
-              month_pretty = str_c(
+              month_pretty = stringr::str_c(
                 lubridate::month(month, label = TRUE),
                 lubridate::year(month),
                 sep = ". "

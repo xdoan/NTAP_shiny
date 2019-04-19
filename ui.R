@@ -1,6 +1,10 @@
 dashboardPage(
 
   dashboardHeader(
+    tags$head(
+      singleton(
+        includeScript("www/readCookie.js")
+      ),
     title = "NTAP Summary Dashboard",
     titleWidth = 350
   ),
@@ -17,10 +21,10 @@ dashboardPage(
     )
   ),
   dashboardBody(
-    tags$head(
-      singleton(
-        includeScript("www/readCookie.js")
-      ),
+    # tags$head(
+    #   singleton(
+    #     includeScript("www/readCookie.js")
+    #   ),
       tags$link(rel = "stylesheet", type = "text/css", href = "custom.css")
     ),
     tabItems(

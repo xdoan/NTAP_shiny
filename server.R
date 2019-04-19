@@ -3,13 +3,16 @@ library(synapser)
 
 shinyServer(function(input, output, session) {
   session$sendCustomMessage(type = "readCookie", message = list())
+
+  withProgress(message = 'Loading data...',
+               {source("getDataNTAP.R")})
  
   foo <- observeEvent(input$cookie, {
     
     synLogin(sessionToken=input$cookie)
       
-    withProgress(message = 'Loading data...',
-               {source("getDataNTAP.R")})
+    # withProgress(message = 'Loading data...',
+    #            {source("getDataNTAP.R")})
   
     output$centersBox <- renderInfoBox({
       centers <- n_distinct(ntap_center_study_summary_df$projectId)

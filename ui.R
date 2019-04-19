@@ -1,8 +1,8 @@
 dashboardPage(
   dashboardHeader(
     title = "NTAP Summary Dashboard",
-    titleWidth = 350,
-    header=list(tags$head(includeScript("www/readCookie.js"))),
+    titleWidth = 350 #,
+    # header=list(tags$head(includeScript("www/readCookie.js"))),
   ),
   dashboardSidebar(
     sidebarMenu(
@@ -17,12 +17,12 @@ dashboardPage(
     )
   ),
   dashboardBody(
-    # tags$head(
-    #   singleton(
-    #     includeScript("www/readCookie.js")
-    #   ),
-    #   tags$link(rel = "stylesheet", type = "text/css", href = "custom.css")
-    # ),
+    tags$head(
+      singleton(
+        includeScript("www/readCookie.js")
+      ),
+      tags$link(rel = "stylesheet", type = "text/css", href = "custom.css")
+    ),
     tabItems(
       tabItem(tabName = "kp_overview",
               fluidRow(

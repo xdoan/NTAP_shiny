@@ -1,4 +1,7 @@
-function(input, output, session) {
+library(shiny)
+library(synapser)
+
+shinyServer(function(input, output, session) {
   session$sendCustomMessage(type = "readCookie", message = list())
  
   foo <- observeEvent(input$cookie, {
@@ -350,6 +353,6 @@ function(input, output, session) {
     })
   
   })
-}
+})
 
   

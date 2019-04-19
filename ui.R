@@ -1,4 +1,7 @@
-dashboardPage(
+library(shiny)
+library(shinydashboard)
+
+shinyUI(dashboardPage(
   dashboardHeader(
     title = "NTAP Summary Dashboard",
     titleWidth = 350 #,
@@ -192,4 +195,4 @@ dashboardPage(
       )
     )
   )
-)
+))

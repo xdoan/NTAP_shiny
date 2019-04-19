@@ -218,7 +218,7 @@ shinyServer(function(input, output, session) {
           create_synapse_links(list(`Synapse Project` = "projectId") )%>%
           select(-projectId, -name_project) %>%
           gather(field, val) %>%
-          mutate(field = str_to_title(field),
+          mutate(field = stringr::str_to_title(field),
                   field = case_when(
                     # field == "Grantnumber" ~ "Grant Number",
                     # field == "Granttype" ~ "Grant Type",

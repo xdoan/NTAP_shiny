@@ -3,10 +3,16 @@ library(synapser)
 
 shinyServer(function(input, output, session) {
   session$sendCustomMessage(type = "readCookie", message = list())
+  setBookmarkExclude(c("cookie", "authorized"))
 
-  # withProgress(message = 'Loading data...',
-  #              {source("getDataNTAP.R")})
- 
+  ## Show message if user is not logged in to synapse
+  unauthorized <- observeEvent(input$authorized, {
+    showModal(modalDialog(
+      title = "Not logged in",
+      HTML("You must log in to <a href=\"https://www.synapse.org/\">Synapse</a> to use this application. Please log in, and then refresh this page.")
+    ))
+  })
+
   foo <- observeEvent(input$cookie, {
     
     synLogin(sessionToken=input$cookie)
@@ -75,7 +81,7 @@ shinyServer(function(input, output, session) {
         layout(font = list(family = "Lato"),
                 legend = list(orientation = 'h',
                               y = 1, x = 0, yanchor = "bottom"),
-                margin = list(l = 450, b = 60, r = 60)) %>% 
+                margin = list(l = 425, b = 60, r = 60)) %>% 
         plotly::config(displayModeBar = F)  
     })
 

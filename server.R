@@ -75,7 +75,7 @@ shinyServer(function(input, output, session) {
         layout(font = list(family = "Lato"),
                 legend = list(orientation = 'h',
                               y = 1, x = 0, yanchor = "bottom"),
-                margin = list(l = 500, b = 60, r = 60)) %>% 
+                margin = list(l = 400, b = 60, r = 60)) %>% 
         plotly::config(displayModeBar = F)  
     })
 

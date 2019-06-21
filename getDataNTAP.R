@@ -155,15 +155,17 @@ plot_ntap_df <- ntap_center_study_summary_df %>%
   mutate(sample = individualID + specimenID) %>% 
   group_by(name_project, consortium) %>% 
   summarise(avg_files = mean(fileId),
-            study = n_distinct(study, na.rm = TRUE)) %>% 
+            study = n_distinct(study, na.rm = TRUE),
+            num_files = max(fileId)) %>% 
   ungroup() %>% 
   arrange(study) %>% 
   mutate(name_project = fct_inorder(name_project),
          label = glue::glue(
-           "<b>{value}:</b>\n{count} studies\n{avg} files per study",
+           "<b>{value}:</b>\n{count} studies\n total {num} files per study",
            value = name_project,
            count = study,
-           avg = avg_files
+           avg = avg_files,
+           num = num_files
          )
   )
 
@@ -176,11 +178,11 @@ label_wrap_gen3 <- function(width = 100) {
 }
 
 p_ntap <- plot_ntap_df %>% 
-  filter(.$avg_files >= 1) %>%
+  filter(.$num_files >= 1) %>%
   mutate( consortium = gsub("cNF Initiative", "cNF", .$consortium)) %>%
   mutate(consortium = gsub("Francis Collins Scholars", "Collins", .$consortium)) %>%
-  ggplot(aes(x = name_project, y = avg_files)) +
-  geom_col(aes(fill = avg_files, text = label), 
+  ggplot(aes(x = name_project, y = num_files)) + #changed from avg_files
+  geom_col(aes(fill = num_files, text = label),  #changed from avg_files
            colour = "slategray", size = 0.3, alpha = 1) +
   # geom_point(y = 0.2, colour = "white", size = 2) +
   # geom_point(aes(colour = consortium), y = 0.2, size = 1.5) +
@@ -188,7 +190,7 @@ p_ntap <- plot_ntap_df %>%
   # scale_color_manual(values = c("#E69F00", "#56B4E9", "#009E73", "#0072B2" ,"#D55E00", "#CC79A7", "#999999")) +
   guides(alpha = FALSE, fill = FALSE, colour = guide_legend(title = NULL)) +
   xlab("") +
-  ylab("Average Files in Synapse") +
+  ylab("Number of Files in Synapse") +
   scale_y_continuous(expand = c(0, 0)) +
   facet_grid(consortium ~ ., 
              scales = "free_y", space = "free_y",
@@ -197,6 +199,7 @@ p_ntap <- plot_ntap_df %>%
   theme(strip.text.y = element_text(face = "bold", angle = 270),
         legend.title = element_blank(),
         axis.text.x = element_text(angle = 0, hjust = 1))
+
 
 
 ### editing from syndccutils

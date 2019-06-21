@@ -229,7 +229,7 @@ shinyServer(function(input, output, session) {
                     # field == "Grantnumber" ~ "Grant Number",
                     # field == "Granttype" ~ "Grant Type",
                     field == "Publication_count" ~ "Publications",
-                    field == "Fundingagency" ~ "Funding Agengy",
+                    field == "Fundingagency" ~ "Funding Agency",
                     # field == "Publication_geodata_produced" ~ "GEO Datasets",
                     TRUE ~ field
                   ),

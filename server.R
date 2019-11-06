@@ -15,7 +15,7 @@ shinyServer(function(input, output, session) {
 
   foo <- observeEvent(input$cookie, {
     
-    synLogin(sessionToken="16272875-1a39-4c57-9b43-8db83228254f") #input$cookie)
+    synLogin(sessionToken= input$cookie)
       
     withProgress(message = 'Loading data...',
                {source("getDataNTAP.R")})

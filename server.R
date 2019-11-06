@@ -15,7 +15,7 @@ shinyServer(function(input, output, session) {
 
   foo <- observeEvent(input$cookie, {
     
-    synLogin(sessionToken=input$cookie)
+    synLogin(sessionToken="16272875-1a39-4c57-9b43-8db83228254f") #input$cookie)
       
     withProgress(message = 'Loading data...',
                {source("getDataNTAP.R")})
@@ -65,7 +65,7 @@ shinyServer(function(input, output, session) {
     })
 
     output$consortium_studies <- renderpier({
-      consortium_donut(consortium_counts, "study", "Studies")
+      consortium_donut(consortium_counts, "studyName", "Studies")
     })
 
     output$consortium_cancers <- renderpier({
@@ -251,7 +251,7 @@ shinyServer(function(input, output, session) {
             filter(projectId == selected_center)
           
           p <- center_df %>%
-            mutate(tool = ifelse(!is.na(summary_y), study, NA)) %>%
+            mutate(tool = ifelse(!is.na(summary), study, NA)) %>%
             select(
               # Studies = study,
               `Tumor Types` = tumorType,

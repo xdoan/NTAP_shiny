@@ -3,14 +3,14 @@ annotationkey_value:
   diagnosis: Diagnosis
   tumorType: Tumor Type
   name_project: Center
-  study: Study
+  studyName: Study
   resourceType: Resource Type
   
 annotationkey_display:
   Assay: assay
   Diagnosis: diagnosis
   Tumor Type: tumorType
-  Study: study
+  Study: studyName
   Resource Type: resourceType
 
 annotationkey_display2:

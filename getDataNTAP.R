@@ -103,11 +103,21 @@ plot_file_counts_by_annotationkey <- function(
     chart
 }
 
-# synapser::synLogin(sessiontoken=input$cookie)
+# synLogin()
 ntap_summary_df <- get_table_df("syn18496443", cache = TRUE) ## moved to NTAP folder
 
+### change open to Open
+ntap_summary_df$consortium <- gsub("open", "Open", ntap_summary_df$consortium) 
+
+### change from char to numeric for dates
+ntap_summary_df$createdOn_file <- as.numeric(ntap_summary_df$createdOn_file)
+ntap_summary_df$modifiedOn_file <- as.numeric(ntap_summary_df$modifiedOn_file)
+
+### change from char to num for publication count
+ntap_summary_df$publication_count <- as.numeric(ntap_summary_df$publication_count)
+
 ntap_summary_df <- ntap_summary_df %>% 
-  mutate_at(.vars = vars(dplyr::matches("(createdOn|modifiedOn)")),
+  mutate_at(.vars = vars(dplyr::matches("(createdOn_file|modifiedOn_file)")),
             .funs = funs(lubridate::as_datetime(floor(. / 1000)))
             ) %>%
   mutate(study = name_project)
@@ -119,7 +129,7 @@ count_vars <- c("fileId", "individualID", "specimenID",
                 "assay", "tool")
 
 ntap_center_study_summary_df <- ntap_summary_df %>% 
-  mutate(tool = ifelse(!is.na(summary_y), name_project, NA)) %>% 
+  mutate(tool = ifelse(!is.na(summary), name_project, NA)) %>% 
   group_by(.dots = c(project_vars, "name_project")) %>% 
   summarise_at(.vars = count_vars,
                .funs = funs(n_distinct(., na.rm = TRUE))) %>% 
@@ -147,7 +157,7 @@ ntap_center_summary_df <- ntap_center_study_summary_df %>%
 ntap_consortium_counts <- ntap_summary_df %>% 
   group_by(consortium) %>% 
   summarize_at(
-    c("fileId", "study", "tumorType", "assay"), 
+    c("fileId", "studyName", "tumorType", "assay"), 
     n_distinct , na.rm = TRUE  ### added na.rm 
   )
 
